@@ -30,19 +30,22 @@ app.get('/search', async (req, res) => {
         });
 
         const page = await browser.newPage();
-        // page.setDefaultTimeout(60000);
+        page.setViewport({width: 1024, height: 768})
         page.waitForNetworkIdle();
         const searchTerm = req.query.query || "";
         console.time("goto");
         await page.goto(`https://www.amazon.it/s?k=${searchTerm}`)
             .catch((err) => console.log("error loading url", err));
-        // await page.waitForTimeout(1000);
         console.timeEnd("goto");
 
         try {
-            await page.waitForSelector(".s-pagination-next");
-            await page.click(".s-pagination-next");
-            await page.waitForSelector(".s-pagination-next");
+            const paginationButton = await page.$(".s-pagination-next");
+            if (paginationButton) {
+                await paginationButton.click();
+                await page.waitForSelector(".s-pagination-next");
+            } else {
+                console.log("Pagination button not found, seems like we've reached the last page.");
+            }
         } catch (error) {
             await page.screenshot({ path: 'screenshot.png' });
             console.error("Pagination button not found:", error);
