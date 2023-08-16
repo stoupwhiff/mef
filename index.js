@@ -36,6 +36,7 @@ app.get('/search', async (req, res) => {
                 '--disable-gl-drawing-for-tests',
                 '--disable-canvas-aa',
                 '--disable-2d-canvas-clip-aa',
+                '--user-data-dir=./chromeData',
             ],
         });
 
@@ -87,19 +88,24 @@ app.get('/search', async (req, res) => {
 
         if (amazonSearchArray.length > 0) {
             const AFFILIATE_TAG = process.env.AFFILIATE_TAG;
-            amazonSearchArray.forEach(item => {
+
+            for(let item of amazonSearchArray) {
                 item.url = item.url + "&tag=" + AFFILIATE_TAG;
-            });
+            }
 
             const results = amazonSearchArray;
 
             await browser.close();
             res.render('search', { results });
 
-        } else {
-            await browser.close();
-            res.render('search', { results: [] });
         }
+
+        // if after 10 seconds the page is still loading, we assume there are no more results
+        await page.waitForSelector(".s-pagination-next", { timeout: 10000 }).catch( async () => {
+            console.log("No more results found.");
+            res.render('search', { results: amazonSearchArray || [] });
+            await browser.close();
+        });
     };
 
     scrape().catch(error => {
