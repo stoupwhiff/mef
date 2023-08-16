@@ -20,16 +20,24 @@ app.get('/search', async (req, res) => {
 
     const scrape = async () => {
 
+        console.log("process.env.PRODUCTION", process.env.PRODUCTION)
+        if(process.env.PRODUCTION) {
+            console.log("process.env.PUPPETEER_EXECUTABLE_PATH", process.env.PUPPETEER_EXECUTABLE_PATH)
+        }
+
         const browser = await puppeteer.launch({
             headless: "new",
             executablePath: process.env.PRODUCTION ? process.env.PUPPETEER_EXECUTABLE_PATH : chromium.path,
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
+                '--single-process',
+                '--no-zygote',
             ],
         });
 
         const page = await browser.newPage();
+        page.setDefaultNavigationTimeout(10000)
         page.setViewport({width: 1024, height: 768})
         page.waitForNetworkIdle();
         const searchTerm = req.query.query || "";
@@ -42,7 +50,7 @@ app.get('/search', async (req, res) => {
             const paginationButton = await page.$(".s-pagination-next");
             if (paginationButton) {
                 await paginationButton.click();
-                // await page.waitForSelector(".s-pagination-next");
+                await page.waitForSelector(".s-pagination-next", { timeout: 10000 });
             } else {
                 console.log("Pagination button not found, seems like we've reached the last page.");
             }
@@ -86,6 +94,9 @@ app.get('/search', async (req, res) => {
             await browser.close();
             res.render('search', { results });
 
+        } else {
+            await browser.close();
+            res.render('search', { results: [] });
         }
     };
 
