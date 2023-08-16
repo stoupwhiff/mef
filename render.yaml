@@ -8,5 +8,5 @@ services:
     buildCommand: npm install
     startCommand: node index.js
     
-    envVars:
-      CHROME_BIN: /usr/bin/google-chrome-stable
+    addons:
+      chrome: stable
