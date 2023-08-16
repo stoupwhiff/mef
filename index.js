@@ -19,7 +19,13 @@ app.get('/search', async (req, res) => {
 
     const scrape = async () => {
 
-        const browser = await puppeteer.launch();
+        const browser = await puppeteer.launch({
+            headless: "new",
+            args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+            ],
+        });
         const page = await browser.newPage();
         const searchTerm = req.query.query || "";
         await page.goto(`https://www.amazon.it/s?k=${searchTerm}`);
