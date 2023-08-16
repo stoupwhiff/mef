@@ -50,13 +50,13 @@ app.get('/search', async (req, res) => {
             await page.screenshot({ path: 'screenshot.png' });
             console.error("Pagination button not found:", error);
         }
-
+        console.log("pagination done");
         const resultContainers = await page.$$("[data-component-type='s-search-result']");
         const amazonSearchArray = [];
 
         for (const result of resultContainers) {
             const title = await result.$eval("h2", node => node.textContent.trim());
-
+            console.log("title", title);
             try {
                 const price = await result.$eval("span.a-price[data-a-color='base'] span.a-offscreen", node => node.innerText.trim());
                 const url = await result.$eval('a.a-link-normal', node => node.href);
@@ -73,6 +73,8 @@ app.get('/search', async (req, res) => {
             }
         }
 
+        console.log("amazonSearchArray", amazonSearchArray.length);
+
         if (amazonSearchArray.length > 0) {
             const AFFILIATE_TAG = process.env.AFFILIATE_TAG;
             amazonSearchArray.forEach(item => {
@@ -87,7 +89,10 @@ app.get('/search', async (req, res) => {
         }
     };
 
-    scrape();
+    scrape().catch(error => {
+        console.error("Scraping failed:", error);
+        res.status(500).send("Something went wrong.");
+    });;
 
 
 
