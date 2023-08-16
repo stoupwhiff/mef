@@ -36,11 +36,12 @@ app.get('/search', async (req, res) => {
                 '--disable-gl-drawing-for-tests',
                 '--disable-canvas-aa',
                 '--disable-2d-canvas-clip-aa',
+                '--user-data-dir=./chromeData',
             ],
         });
 
         const page = await browser.newPage();
-        page.setDefaultNavigationTimeout(12000)
+        page.setDefaultNavigationTimeout(10000)
         page.setViewport({width: 1024, height: 768})
         page.waitForNetworkIdle();
         const searchTerm = req.query.query || "";
@@ -53,7 +54,7 @@ app.get('/search', async (req, res) => {
             const paginationButton = await page.$(".s-pagination-next");
             if (paginationButton) {
                 await paginationButton.click();
-                await page.waitForSelector(".s-pagination-next");
+                await page.waitForSelector(".s-pagination-next", { timeout: 10000 });
             } else {
                 console.log("Pagination button not found, seems like we've reached the last page.");
             }
@@ -99,15 +100,10 @@ app.get('/search', async (req, res) => {
 
         }
 
-        // if after 10 seconds the page is still loading, we assume there are no more results
-        await page.waitForSelector(".s-pagination-next", { timeout: 10000 }).catch( async () => {
-            console.log("No more results found.");
-            res.render('search', { results: amazonSearchArray || [] });
-            await browser.close();
-        });
+
     };
 
-    scrape().catch(error => async () => {
+    scrape().catch(error => {
         console.error("Scraping failed:", error);
         res.status(500).send("Something went wrong.");
     });;
