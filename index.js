@@ -29,11 +29,7 @@ app.get('/search', async (req, res) => {
         const page = await browser.newPage();
         const searchTerm = req.query.query || "";
         await page.goto(`https://www.amazon.it/s?k=${searchTerm}`);
-        await page.waitForSelector(".s-pagination-next");
-
-        await page.click(".s-pagination-next");
         await page.waitForTimeout(1000);
-        await page.waitForSelector(".s-pagination-next");
 
         const resultContainers = await page.$$("[data-component-type='s-search-result']");
         const amazonSearchArray = [];
