@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="/css/styles.css">
+
+<div class="search-container">
+    <form action="/search" method="get" id="search-form">
+        <input type="text" name="query" id="query" placeholder="Cerca su Amazon...">
+        <input type="submit" value="Cerca">
+    </form>
+</div>
+
+<div class="grid">
+  <% results.forEach(item => { %>
+      <div class="card">
+          <img src="<%= item.imageUrl %>" class="card-img">
+          <div class="card-body">
+              <h3><%= item.title %></h3>
+              <p><%= item.price %></p>
+              <a href="<%= item.url %>" class="btn" target="_blank">Vai al prodotto</a>
+          </div>
+      </div>
+  <% }) %>
+</div>
