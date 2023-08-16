@@ -36,7 +36,6 @@ app.get('/search', async (req, res) => {
                 '--disable-gl-drawing-for-tests',
                 '--disable-canvas-aa',
                 '--disable-2d-canvas-clip-aa',
-                '--user-data-dir=/tmp/user-data',
             ],
         });
 
