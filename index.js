@@ -5,6 +5,7 @@ const cors = require('cors');
 const puppeteer = require("puppeteer");
 const app = express();
 const http = require('http');
+const chrome = require('chrome-aws-lambda');
 
 app.use(cors());
 
@@ -21,6 +22,7 @@ app.get('/search', async (req, res) => {
 
         const browser = await puppeteer.launch({
             headless: "new",
+            executablePath: await chrome.executablePath,
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
