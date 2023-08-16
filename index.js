@@ -20,7 +20,7 @@ app.get('/search', async (req, res) => {
 
         const browser = await puppeteer.launch({ 
             headless: "new",
-            executablePath: '/opt/render/project/.chrome',
+            // executablePath: '/opt/render/project/.chrome',
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
