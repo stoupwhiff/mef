@@ -22,10 +22,12 @@ app.get('/search', async (req, res) => {
 
         const browser = await puppeteer.launch({
             headless: "new",
-            executablePath: chromium.path,
+            executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
+                '--single-process',
+                '--no-zygote',
             ],
         });
 
