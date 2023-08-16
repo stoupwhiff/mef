@@ -22,7 +22,7 @@ app.get('/search', async (req, res) => {
 
         const browser = await puppeteer.launch({
             headless: "new",
-            executablePath: "/opt/render/project/.chrome/chrome/linux-115.0.5790.170",
+            executablePath: "/opt/render/project/.chrome/chrome",
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
