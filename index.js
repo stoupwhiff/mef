@@ -101,7 +101,7 @@ app.get('/search', async (req, res) => {
         }
 
         // if after 10 seconds the page is still loading, we assume there are no more results
-        await page.waitForSelector(".s-pagination-next", { timeout: 10000 }).catch( async () => {
+        await page.waitForSelector(".s-pagination-next", { timeout: 20000 }).catch( async () => {
             console.log("No more results found.");
             res.render('search', { results: amazonSearchArray || [] });
             await browser.close();
