@@ -36,7 +36,7 @@ app.get('/search', async (req, res) => {
                 '--disable-gl-drawing-for-tests',
                 '--disable-canvas-aa',
                 '--disable-2d-canvas-clip-aa',
-                '--user-data-dir=./chromeData',
+                '--user-data-dir=/tmp/user-data',
             ],
         });
 
@@ -46,7 +46,7 @@ app.get('/search', async (req, res) => {
         page.waitForNetworkIdle();
         const searchTerm = req.query.query || "";
         console.time("goto");
-        await page.goto(`https://www.amazon.it/s?k=${searchTerm}`)
+        await page.goto(`https://www.amazon.it/s?k=${searchTerm}`, { waitUntil: "load" })
             .catch((err) => console.log("error loading url", err));
         console.timeEnd("goto");
 
@@ -108,8 +108,11 @@ app.get('/search', async (req, res) => {
         });
     };
 
-    scrape().catch(error => {
+    scrape().catch(error => async () => {
         console.error("Scraping failed:", error);
+        if (browser) {
+            await browser.close();
+        }
         res.status(500).send("Something went wrong.");
     });;
 
