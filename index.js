@@ -27,7 +27,7 @@ app.get('/search', async (req, res) => {
 
         const browser = await puppeteer.launch({
             headless: "new",
-            executablePath: /*process.env.NODE_ENV ? process.env.PUPPETEER_EXECUTABLE_PATH :*/ (chromium.path ?? puppeteer.executablePath()),
+            executablePath: /*process.env.NODE_ENV ? process.env.PUPPETEER_EXECUTABLE_PATH :*/ (puppeteer.executablePath()),
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
