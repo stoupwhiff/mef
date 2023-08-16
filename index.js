@@ -27,7 +27,7 @@ app.get('/search', async (req, res) => {
 
         const browser = await puppeteer.launch({
             headless: "new",
-            executablePath: process.env.NODE_ENV ? process.env.PUPPETEER_EXECUTABLE_PATH : chromium.path,
+            executablePath: /*process.env.NODE_ENV ? process.env.PUPPETEER_EXECUTABLE_PATH :*/ (chromium.path ?? puppeteer.executablePath()),
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
@@ -36,7 +36,6 @@ app.get('/search', async (req, res) => {
                 '--disable-gl-drawing-for-tests',
                 '--disable-canvas-aa',
                 '--disable-2d-canvas-clip-aa',
-                '--user-data-dir=./chromeData',
             ],
         });
 
