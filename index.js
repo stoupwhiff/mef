@@ -42,7 +42,7 @@ app.get('/search', async (req, res) => {
             const paginationButton = await page.$(".s-pagination-next");
             if (paginationButton) {
                 await paginationButton.click();
-                await page.waitForSelector(".s-pagination-next");
+                // await page.waitForSelector(".s-pagination-next");
             } else {
                 console.log("Pagination button not found, seems like we've reached the last page.");
             }
