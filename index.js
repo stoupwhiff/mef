@@ -2,14 +2,6 @@ require('dotenv').config();
 
 const fs = require('fs');
 
-fs.readdir('/opt', (err, files) => {
-  files.forEach(file => {
-    if (file.includes('chrome')) {
-      console.log('Found Chrome at:', file); 
-    }
-  });
-});
-
 const express = require('express');
 const cors = require('cors');
 const puppeteer = require("puppeteer");
@@ -23,6 +15,21 @@ app.use('/css', express.static(__dirname + '/css'));
 
 app.get('/', (req, res) => {
     res.render('search', { results: [] });
+});
+
+app.get('/v', async (req, res) => {
+    try {
+        fs.readdir('/opt', (err, files) => {
+            files.forEach(file => {
+              if (file.includes('chrome')) {
+                console.log('Found Chrome at:', file); 
+                res.send('Found Chrome at:', file);
+              }
+            });
+          });
+    } catch (error) {
+        console.log('Error while searching for Chrome:', error);
+    }
 });
 
 app.get('/search', async (req, res) => {
