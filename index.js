@@ -30,18 +30,17 @@ app.get('/search', async (req, res) => {
         });
 
         const page = await browser.newPage();
-        page.setDefaultTimeout(60000);
+        // page.setDefaultTimeout(60000);
+        page.waitForNetworkIdle();
         const searchTerm = req.query.query || "";
         console.time("goto");
-        await page.goto(`https://www.amazon.it/s?k=${searchTerm}`, {
-            waitUntil: "networkidle0",
-        })
+        await page.goto(`https://www.amazon.it/s?k=${searchTerm}`)
             .catch((err) => console.log("error loading url", err));
-        await page.waitForTimeout(1000);
+        // await page.waitForTimeout(1000);
         console.timeEnd("goto");
 
         try {
-            await page.waitForSelector(".s-pagination-next", { timeout: 30000 });
+            await page.waitForSelector(".s-pagination-next");
             await page.click(".s-pagination-next");
             await page.waitForSelector(".s-pagination-next");
         } catch (error) {
