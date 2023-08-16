@@ -33,7 +33,7 @@ app.get('/search', async (req, res) => {
         const searchTerm = req.query.query || "";
         console.time("goto");
         await page.goto(`https://www.amazon.it/s?k=${searchTerm}`, {
-            waitUntil: "load",
+            waitUntil: "networkidle2",
         })
             .catch((err) => console.log("error loading url", err));
         await page.waitForTimeout(1000);
