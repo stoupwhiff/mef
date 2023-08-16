@@ -40,12 +40,12 @@ app.get('/search', async (req, res) => {
         });
 
         const page = await browser.newPage();
-        page.setDefaultNavigationTimeout(10000)
+        page.setDefaultNavigationTimeout(12000)
         page.setViewport({width: 1024, height: 768})
         page.waitForNetworkIdle();
         const searchTerm = req.query.query || "";
         console.time("goto");
-        await page.goto(`https://www.amazon.it/s?k=${searchTerm}`, { waitUntil: "load" })
+        await page.goto(`https://www.amazon.it/s?k=${searchTerm}`)
             .catch((err) => console.log("error loading url", err));
         console.timeEnd("goto");
 
@@ -53,7 +53,7 @@ app.get('/search', async (req, res) => {
             const paginationButton = await page.$(".s-pagination-next");
             if (paginationButton) {
                 await paginationButton.click();
-                await page.waitForSelector(".s-pagination-next", { timeout: 10000 });
+                await page.waitForSelector(".s-pagination-next");
             } else {
                 console.log("Pagination button not found, seems like we've reached the last page.");
             }
@@ -100,7 +100,7 @@ app.get('/search', async (req, res) => {
         }
 
         // if after 10 seconds the page is still loading, we assume there are no more results
-        await page.waitForSelector(".s-pagination-next", { timeout: 20000 }).catch( async () => {
+        await page.waitForSelector(".s-pagination-next", { timeout: 10000 }).catch( async () => {
             console.log("No more results found.");
             res.render('search', { results: amazonSearchArray || [] });
             await browser.close();
@@ -109,9 +109,6 @@ app.get('/search', async (req, res) => {
 
     scrape().catch(error => async () => {
         console.error("Scraping failed:", error);
-        if (browser) {
-            await browser.close();
-        }
         res.status(500).send("Something went wrong.");
     });;
 
