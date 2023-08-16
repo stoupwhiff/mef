@@ -41,7 +41,6 @@ app.get('/search', async (req, res) => {
 
         await page.waitForSelector(".s-pagination-next");
         await page.click(".s-pagination-next");
-        await page.w
         await page.waitForSelector(".s-pagination-next");
 
         const resultContainers = await page.$$("[data-component-type='s-search-result']");
