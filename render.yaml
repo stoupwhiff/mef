@@ -3,7 +3,6 @@ services:
   - type: web
     name: my-app 
     runtime: nodejs
-    nodeVersion: "18"
 
     buildCommand: |
       npm install
@@ -12,6 +11,3 @@ services:
       sudo apt-get install google-chrome-stable
 
     startCommand: node index.js
-    
-    addons:
-      chrome: stable
