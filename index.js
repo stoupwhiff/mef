@@ -20,14 +20,14 @@ app.get('/search', async (req, res) => {
 
     const scrape = async () => {
 
-        console.log("process.env.PRODUCTION", process.env.PRODUCTION)
-        if(process.env.PRODUCTION) {
+        console.log("process.env.NODE_ENV", process.env.NODE_ENV)
+        if(process.env.NODE_ENV) {
             console.log("process.env.PUPPETEER_EXECUTABLE_PATH", process.env.PUPPETEER_EXECUTABLE_PATH)
         }
 
         const browser = await puppeteer.launch({
             headless: "new",
-            executablePath: /*process.env.PRODUCTION ? process.env.PUPPETEER_EXECUTABLE_PATH :*/ chromium.path,
+            executablePath: process.env.NODE_ENV ? process.env.PUPPETEER_EXECUTABLE_PATH : chromium.path,
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
@@ -79,6 +79,7 @@ app.get('/search', async (req, res) => {
                     url,
                     imageUrl
                 });
+
             } catch (error) {
                 console.error("Failed to extract some data for a product: ", error);
             }
