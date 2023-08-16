@@ -31,11 +31,17 @@ app.get('/search', async (req, res) => {
 
         const page = await browser.newPage();
         const searchTerm = req.query.query || "";
-        await page.goto(`https://www.amazon.it/s?k=${searchTerm}`, { waitUntil: "domcontentloaded" })
-        .catch((err) => console.log("error loading url", err));
+        console.time("goto");
+        await page.goto(`https://www.amazon.it/s?k=${searchTerm}`, {
+            waitUntil: "load",
+        })
+            .catch((err) => console.log("error loading url", err));
+        await page.waitForTimeout(1000);
+        console.timeEnd("goto");
 
         await page.waitForSelector(".s-pagination-next");
         await page.click(".s-pagination-next");
+        await page.w
         await page.waitForSelector(".s-pagination-next");
 
         const resultContainers = await page.$$("[data-component-type='s-search-result']");
