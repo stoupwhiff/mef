@@ -1,5 +1,14 @@
 require('dotenv').config();
 
+const fs = require('fs');
+
+fs.readdir('/opt', (err, files) => {
+  files.forEach(file => {
+    if (file.includes('chrome')) {
+      console.log('Found Chrome at:', file); 
+    }
+  });
+});
 
 const express = require('express');
 const cors = require('cors');
