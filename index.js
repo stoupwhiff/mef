@@ -5,7 +5,7 @@ const cors = require('cors');
 const puppeteer = require("puppeteer");
 const app = express();
 const http = require('http');
-const chrome = require('chrome-aws-lambda');
+const chromium = require('chromium');
 
 app.use(cors());
 
@@ -22,12 +22,13 @@ app.get('/search', async (req, res) => {
 
         const browser = await puppeteer.launch({
             headless: "new",
-            executablePath: "/opt/render/project/.chrome/chrome",
+            executablePath: chromium.path,
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
             ],
         });
+
         const page = await browser.newPage();
         const searchTerm = req.query.query || "";
         await page.goto(`https://www.amazon.it/s?k=${searchTerm}`);
