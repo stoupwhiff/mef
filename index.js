@@ -16,16 +16,10 @@ app.get('/', (req, res) => {
 });
 
 app.get('/search', async (req, res) => {
+
     const scrape = async () => {
 
-        const browser = await puppeteer.launch({ 
-            headless: "new",
-            executablePath: '/opt/render/project/.render/chrome/opt/google/chrome/',
-            args: [
-                '--no-sandbox',
-                '--disable-setuid-sandbox',
-            ]
-        });
+        const browser = await puppeteer.launch();
         const page = await browser.newPage();
         const searchTerm = req.query.query || "";
         await page.goto(`https://www.amazon.it/s?k=${searchTerm}`);
