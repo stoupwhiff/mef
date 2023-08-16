@@ -19,8 +19,7 @@ app.get('/search', async (req, res) => {
     const scrape = async () => {
 
         const browser = await puppeteer.launch({ 
-            headless: true,
-            executablePath: '/usr/bin/chromium-browser',
+            headless: "new",
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
