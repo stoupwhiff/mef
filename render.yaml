@@ -5,7 +5,12 @@ services:
     runtime: nodejs
     nodeVersion: "18"
 
-    buildCommand: npm install
+    buildCommand: |
+      npm install
+      apt-get update
+      apt-get install -y chromium-browser
+      sudo apt-get install google-chrome-stable
+
     startCommand: node index.js
     
     addons:
