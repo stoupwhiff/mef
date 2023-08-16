@@ -22,12 +22,10 @@ app.get('/search', async (req, res) => {
 
         const browser = await puppeteer.launch({
             headless: "new",
-            executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
+            executablePath: process.env.PRODUCTION ? process.env.PUPPETEER_EXECUTABLE_PATH : chromium.path,
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
-                '--single-process',
-                '--no-zygote',
             ],
         });
 
@@ -35,7 +33,7 @@ app.get('/search', async (req, res) => {
         const searchTerm = req.query.query || "";
         await page.goto(`https://www.amazon.it/s?k=${searchTerm}`, { waitUntil: "domcontentloaded" })
         .catch((err) => console.log("error loading url", err));
-        
+
         await page.waitForTimeout(1000);
 
         const resultContainers = await page.$$("[data-component-type='s-search-result']");
