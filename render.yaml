@@ -1,6 +1,12 @@
-language: node_js
-node_js: "18"
-install:
-  - npm install
-addons:
-  chrome: stable
+services:
+
+  - type: web
+    name: my-app 
+    runtime: nodejs
+    nodeVersion: "18"
+
+    buildCommand: npm install
+    startCommand: node index.js
+    
+    envVars:
+      CHROME_BIN: /usr/bin/google-chrome-stable
