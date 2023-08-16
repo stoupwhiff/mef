@@ -33,6 +33,9 @@ app.get('/search', async (req, res) => {
                 '--disable-setuid-sandbox',
                 '--single-process',
                 '--no-zygote',
+                '--disable-gl-drawing-for-tests',
+                '--disable-canvas-aa',
+                '--disable-2d-canvas-clip-aa',
             ],
         });
 
@@ -55,7 +58,6 @@ app.get('/search', async (req, res) => {
                 console.log("Pagination button not found, seems like we've reached the last page.");
             }
         } catch (error) {
-            await page.screenshot({ path: 'screenshot.png' });
             console.error("Pagination button not found:", error);
         }
         console.log("pagination done");
