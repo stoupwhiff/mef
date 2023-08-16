@@ -30,18 +30,24 @@ app.get('/search', async (req, res) => {
         });
 
         const page = await browser.newPage();
+        page.setDefaultTimeout(60000);
         const searchTerm = req.query.query || "";
         console.time("goto");
         await page.goto(`https://www.amazon.it/s?k=${searchTerm}`, {
-            waitUntil: "networkidle2",
+            waitUntil: "networkidle0",
         })
             .catch((err) => console.log("error loading url", err));
         await page.waitForTimeout(1000);
         console.timeEnd("goto");
 
-        await page.waitForSelector(".s-pagination-next");
-        await page.click(".s-pagination-next");
-        await page.waitForSelector(".s-pagination-next");
+        try {
+            await page.waitForSelector(".s-pagination-next", { timeout: 30000 });
+            await page.click(".s-pagination-next");
+            await page.waitForSelector(".s-pagination-next");
+        } catch (error) {
+            await page.screenshot({ path: 'screenshot.png' });
+            console.error("Pagination button not found:", error);
+        }
 
         const resultContainers = await page.$$("[data-component-type='s-search-result']");
         const amazonSearchArray = [];
